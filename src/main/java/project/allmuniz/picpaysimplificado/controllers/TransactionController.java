@@ -1,5 +1,7 @@
 package project.allmuniz.picpaysimplificado.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +14,7 @@ import project.allmuniz.picpaysimplificado.services.TransactionService;
 
 @RestController
 @RequestMapping("/transaction")
+@Tag(name = "Transaction", description = "Transactions Manager")
 public class TransactionController {
 
     private final TransactionService transactionService;
@@ -21,6 +24,8 @@ public class TransactionController {
     }
 
     @PostMapping
+    @Operation(description = "Create",
+            summary = "Transaction create")
     public ResponseEntity<Transaction> createTransaction(@RequestBody TransactionDTO transaction) throws Exception {
         Transaction newTransaction = this.transactionService.createTransaction(transaction);
         return new ResponseEntity<>(newTransaction, HttpStatus.OK);
