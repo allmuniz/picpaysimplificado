@@ -3,9 +3,11 @@ package project.allmuniz.picpaysimplificado.services;
 import org.springframework.stereotype.Service;
 import project.allmuniz.picpaysimplificado.domain.user.User;
 import project.allmuniz.picpaysimplificado.domain.user.UserType;
+import project.allmuniz.picpaysimplificado.dtos.UserDTO;
 import project.allmuniz.picpaysimplificado.repositories.UserRepository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -27,6 +29,16 @@ public class UserService {
 
     public User findUserById(Long id) throws Exception {
         return this.userRepository.findById(id).orElseThrow(() -> new Exception("Usuário não encontrado"));
+    }
+
+    public User createUser(UserDTO data) {
+        User user = new User(data);
+        this.saveUser(user);
+        return user;
+    }
+
+    public List<User> getAllUsers() {
+        return this.userRepository.findAll();
     }
 
     public void saveUser(User user){
