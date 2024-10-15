@@ -1,6 +1,5 @@
 package project.allmuniz.picpaysimplificado.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,14 +19,16 @@ public class TransactionService {
     private final UserService userService;
     private final TransactionRepository transactionRepository;
     private final RestTemplate restTemplate;
+    private final NotificationService notificationService;
 
-    public TransactionService(UserService userService, TransactionRepository transactionRepository, RestTemplate restTemplate) {
+    public TransactionService(UserService userService, TransactionRepository transactionRepository, RestTemplate restTemplate, NotificationService notificationService) {
         this.userService = userService;
         this.transactionRepository = transactionRepository;
         this.restTemplate = restTemplate;
+        this.notificationService = notificationService;
     }
 
-    public void createTransaction(TransactionDTO transaction) throws Exception {
+    public Transaction createTransaction(TransactionDTO transaction) throws Exception {
         User sender = userService.findUserById(transaction.senderId());
         User receiver = userService.findUserById(transaction.receiverId());
 
@@ -50,6 +51,11 @@ public class TransactionService {
         this.transactionRepository.save(newTransaction);
         this.userService.saveUser(sender);
         this.userService.saveUser(receiver);
+
+        this.notificationService.sendNotification(sender, "Transaction completed sucessfully");
+        this.notificationService.sendNotification(receiver, "Transaction received sucessfully");
+
+        return newTransaction;
     }
 
     public boolean authorizeTransaction(User sender, BigDecimal value) throws Exception {
