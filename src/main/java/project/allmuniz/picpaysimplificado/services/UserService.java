@@ -31,14 +31,14 @@ public class UserService {
         return this.userRepository.findById(id).orElseThrow(() -> new Exception("Usuário não encontrado"));
     }
 
+    public List<User> getAllUsers() {
+        return this.userRepository.findAll();
+    }
+
     public User createUser(UserDTO data) {
         User user = new User(data);
         this.saveUser(user);
         return user;
-    }
-
-    public List<User> getAllUsers() {
-        return this.userRepository.findAll();
     }
 
     public void saveUser(User user){
